@@ -15,7 +15,7 @@
     "d3": "^3.5.17",
     "fs": "^0.0.1-security",
     "vue": "^2.6.12",
-    "vuetify": "^2.2.11"
+    "vuetify": "^2.4.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

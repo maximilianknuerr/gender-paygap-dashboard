@@ -1,5 +1,5 @@
 <template>
-
+  <div></div>
 </template>
 
 <script>
@@ -59,8 +59,8 @@ name: "ScatterPlot",
           .data(this.dataa)
           .enter()
           .append("circle")
-          .attr("cx", function (d) { return x(d.Sepal_Length); } )
-          .attr("cy", function (d) { return y(d.Petal_Length); } )
+          .attr("cx", function (d) { return x(d.PayPlusBonus); } )
+          .attr("cy", function (d) { return y(d.JobTitle); } )
           .attr("r", 5)
           .style("fill", function (d) { return color(d.Species) } )
     }

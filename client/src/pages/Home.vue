@@ -1,5 +1,5 @@
 <template v-if="allData">
-<v-container>
+<v-layout>
   <v-row>
     <v-col cols="3">
       <v-select @change="changeAge" :items="ageItems" label="Age"></v-select>
@@ -12,18 +12,26 @@
     </v-col>
   </v-row>
   <v-row>
-    <PieChart v-if="maleFemale" :dataa="maleFemale"></PieChart>
+    <v-col cols="6">
+      <ScatterPlot v-if="allData" :dataa="allData"></ScatterPlot>
+    </v-col>
+    <v-col cols="6">
+      <PieChart v-if="maleFemale" :dataa="maleFemale"></PieChart>
+    </v-col>
+
   </v-row>
-</v-container>
+</v-layout>
 </template>
 
 <script>
 import PieChart from "@/components/PieChart";
 import getData from "@/helpers/DataFetcher";
+import ScatterPlot from "@/components/ScatterPlot";
 export default {
 name: "Home",
   components: {
     PieChart,
+    ScatterPlot
   },
   data: () => ({
     allData: null,
