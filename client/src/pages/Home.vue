@@ -1,5 +1,5 @@
 <template v-if="allData">
-<v-layout>
+<v-container fill-height>
   <v-row>
     <v-col cols="3">
       <v-select @change="changeAge" :items="ageItems" label="Age"></v-select>
@@ -18,18 +18,27 @@
     <v-col cols="6">
       <PieChart v-if="maleFemale" :dataa="maleFemale"></PieChart>
     </v-col>
-
   </v-row>
-</v-layout>
+  <v-row>
+    <v-col cols="6">
+      <RidgeLinePlot v-if="allData" :dataa="allData"></RidgeLinePlot>
+    </v-col>
+    <v-col cols="6">
+
+    </v-col>
+  </v-row>
+</v-container>
 </template>
 
 <script>
 import PieChart from "@/components/PieChart";
 import getData from "@/helpers/DataFetcher";
 import ScatterPlot from "@/components/ScatterPlot";
+import RidgeLinePlot from "@/components/RidgeLinePlot";
 export default {
 name: "Home",
   components: {
+    RidgeLinePlot,
     PieChart,
     ScatterPlot
   },
@@ -62,7 +71,7 @@ name: "Home",
         .then((data) => {
           console.log(data)
           this.allData = data[0]
-          this.maleFemale = data[1]
+          this.maleFemale = [data[1], data[2]]
         })
 
     }

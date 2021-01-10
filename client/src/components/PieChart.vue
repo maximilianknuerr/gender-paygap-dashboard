@@ -41,25 +41,26 @@ name: "PieChart",
   },
   methods: {
     draw() {
-      var color = d3.scale.ordinal()
-            .domain(this.dataa)
+      var color = d3.scaleOrdinal()
+            .domain("Male", "Female")
             .range(["#98abc5", "#a05d56"])
-      var pie = d3.layout.pie().value(function(d) {return d.value; })
+      var pie = d3.pie().value(function(d) {return d.value; })
       var data_ready = pie(d3.entries(this.dataa))
+      this.svg.selectAll('path').remove()
       this.svg
           .selectAll('whatever')
           .data(data_ready)
           .enter()
           .append('path')
-          .attr('d', d3.svg.arc()
+          .attr('d', d3.arc()
               .innerRadius(0)
               .outerRadius(this.radius)
           )
           .attr('fill', function(d){ return(color(d.data.key)) })
-          .attr("stroke", "black")
-          .style("stroke-width", "2px")
-          .style("opacity", 1)
-    }
+          .style("opacity", 0.9)
+
+    },
+
   },
   mounted() {
     this.draw()

@@ -40,10 +40,11 @@ def manipulateData(education, jobtitle, age):
         min, max = min_max_age(age)
         mdata = mdata.loc[(df['Age'] > min) & (df['Age'] < max)]
     gender = mdata["Gender"].value_counts()
-    print(mdata)
+    female = gender.Female
+    male = gender.Male
     mdata_result = mdata.to_json(orient="records")
     mdata_json = json.loads(mdata_result)
-    return mdata_json, gender
+    return mdata_json, male, female
 
 def min_max_age(age):
     age = age.split(" - ")
