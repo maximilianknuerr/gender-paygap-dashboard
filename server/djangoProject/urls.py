@@ -19,5 +19,6 @@ from api import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('data', views.data)
+    path('data', views.data),
+    path('gender', views.gender_data)
 ]

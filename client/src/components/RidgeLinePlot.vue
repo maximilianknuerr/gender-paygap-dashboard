@@ -3,6 +3,8 @@
 </template>
 
 <script>
+/* eslint-disable no-debugger */
+
 import * as d3 from 'd3'
 export default {
 name: "RidgeLinePlot",
@@ -18,24 +20,24 @@ name: "RidgeLinePlot",
     }
   },
   computed: {
-    // margin: function (){
-    //   return {top: 30, right: 30, bottom: 50, left: 100}
-    // },
-    // width: function () {
-    //   return 800 - margin.left - margin.right
-    // },
-    // height: function () {
-    //   return 400 - margin.top - margin.bottom
-    // },
-    // svg: function() {
-    //   return d3.select("#ridgeline")
-    //       .append("svg")
-    //       .attr("width", width + margin.left + margin.right)
-    //       .attr("height", height + margin.top + margin.bottom)
-    //       .append("g")
-    //       .attr("transform",
-    //           "translate(" + margin.left + "," + margin.top + ")")
-    // },
+    margin: function (){
+      return {top: 30, right: 30, bottom: 50, left: 100}
+    },
+    width: function () {
+      return 800 - this.margin.left - this.margin.right
+    },
+    height: function () {
+      return 400 - this.margin.top - this.margin.bottom
+    },
+    svg: function() {
+      return d3.select("#ridgeline")
+          .append("svg")
+          .attr("width", this.width + this.margin.left + this.margin.right)
+          .attr("height", this.height + this.margin.top + this.margin.bottom)
+          .append("g")
+          .attr("transform",
+              "translate(" + this.margin.left + "," + this.margin.top + ")")
+    },
     
   },
   methods: {
@@ -44,27 +46,27 @@ name: "RidgeLinePlot",
       var width = 600 - margin.left - margin.right
       var height = 400 - margin.top - margin.bottom
 
-      var svg = d3.select("#ridgeline")
-          .append("svg")
-          .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
-          .append("g")
-          .attr("transform",
-              "translate(" + margin.left + "," + margin.top + ")")
+      // var svg = d3.select("#ridgeline")
+      //     .append("svg")
+      //     .attr("width", width + margin.left + margin.right)
+      //     .attr("height", height + margin.top + margin.bottom)
+      //     .append("g")
+      //     .attr("transform",
+      //         "translate(" + margin.left + "," + margin.top + ")")
       var categories = ["IT", "Software Engineer", "Financial Analyst", "Sales Associate", "Marketing Associate", "Driver", "Manager", "Graphic Designer", "Warehouse Associate", "Data Scientist"]
 
       // Add X axis
       var x = d3.scaleLinear()
           .domain([50000, 200000])
           .range([ 0, width ]);
-      svg.append("g")
+      this.svg.append("g")
           .attr("class", "xAxis")
           .attr("transform", "translate(0," + height + ")")
           .call(d3.axisBottom(x).tickValues([ 50000, 100000, 150000, 200000]).tickSize(-height) )
           .select(".domain").remove()
 
       // Add X axis label:
-      svg.append("text")
+      this.svg.append("text")
           .attr("text-anchor", "end")
           .attr("x", width)
           .attr("y", height + 40)
@@ -80,7 +82,8 @@ name: "RidgeLinePlot",
           .domain(categories)
           .range([0, height])
           .paddingInner(1)
-      svg.append("g")
+
+      this.svg.append("g")
           .call(d3.axisLeft(yName).tickSize(0))
           .select(".domain").remove()
       // var myColor = d3.scaleSequential()
@@ -166,9 +169,9 @@ name: "RidgeLinePlot",
 
         femaleDensity.push({key: key, density: density})
       }
-
+      this.svg.selectAll("path").remove()
       // Add areas
-      svg.selectAll("areas")
+      this.svg.selectAll("areas")
           .data(maleDensity)
           .enter()
           .append("path")
@@ -195,7 +198,9 @@ name: "RidgeLinePlot",
               })
           )
 
-      svg.selectAll("areas")
+
+
+      this.svg.selectAll("areas")
           .data(femaleDensity)
           .enter()
           .append("path")

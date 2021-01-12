@@ -1,18 +1,28 @@
 <template>
-  <div id="scatterplot"></div>
+  <div>
+    <div class="tooltip"></div>
+    <div id="scatterplot"></div>
+  </div>
+
 </template>
 
 <script>
+/* eslint-disable no-unused-vars,no-debugger */
+
 import * as d3 from "d3";
 
 
 export default {
 name: "ScatterPlot",
-  data: () => ({
+  data: function(){
+    return {
       selected: this.dataa,
-  }),
+  }},
   props: ["dataa"],
   watch: {
+    selected() {
+      this.$emit("selected", this.selected)
+    },
     dataa() {
       this.draw()
     }
@@ -74,7 +84,7 @@ name: "ScatterPlot",
 
     },
     draw() {
-
+      var my = this
       // Color scale: give me a specie name, I return a color
       var color = d3.scaleOrdinal()
           .domain(['Male', 'Female' ])
@@ -82,62 +92,21 @@ name: "ScatterPlot",
 
       // Add a tooltip div. Here I define the general feature of the tooltip: stuff that do not depend on the data point.
       // Its opacity is set to 0: we don't see it by default.
-      // var tooltip = d3.select("#scatterplot")
-      //     .append("div")
-      //     .style("opacity", 0)
-      //     .attr("class", "tooltip")
-      //     .style("background-color", "white")
-      //     .style("border", "solid")
-      //     .style("border-width", "1px")
-      //     .style("border-radius", "5px")
-      //     .style("padding", "10px")
-      //
-      // // A function that change this tooltip when the user hover a point.
-      // // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
-      // var mouseclick = function() {
-      //   tooltip
-      //       .style("opacity", 1)
-      // }
-      // var mousemove = function(d) {
-      //   tooltip
-      //       .html("Gender: " + d.Gender + ", Job Title: " + d.JobTitle + ", Pay plus Bonus: " + d.PayPlusBonus)
-      //       .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-      //       .style("top", (d3.mouse(this)[1]) + "px")
-      // }
-      //
-      // // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
-      // var mouseleave = function() {
-      //   tooltip
-      //       .transition()
-      //       .duration(200)
-      //       .style("opacity", 0)
-      // }
-      //
-      // // Highlight the specie that is hovered
-      // var highlight = function(d) {
-      //   var selected_gender = d.Gender
-      //
-      //   d3.selectAll(".dot")
-      //       .transition()
-      //       .duration(200)
-      //       .style("fill", "lightgrey")
-      //       .attr("r", 1)
-      //
-      //   d3.selectAll("." + selected_gender)
-      //       .transition()
-      //       .duration(200)
-      //       .style("fill", color(selected_gender))
-      //       .attr("r", 5)
-      // }
-      // // Highlight the specie that is hovered
-      // var doNotHighlight = function () {
-      //   mouseleave()
-      //   d3.selectAll(".dot")
-      //       .transition()
-      //       .duration(200)
-      //       .style("fill", function (d) { return color(d.Gender) } )
-      //       .attr("r", 3 )
-      // }
+      var tooltip = d3.select("div.tooltip")
+          tooltip.style("position", "fixed")
+              .style("opacity", 0)
+              .style("display", "none")
+              .style("width", "auto")
+              .style("height", "auto")
+              .style("background", "#515A5A")
+              .style("border", "none")
+              .style("border-radius", "4px")
+              .style("color", "#fff")
+              .style("font", "12px sans-serif")
+              .style("padding", "5px")
+              .style("text-align", "center")
+
+
       const brush = d3.brush()
           .extent([[0,0], [this.width, this.height]]);
 
@@ -153,7 +122,7 @@ name: "ScatterPlot",
 
       var handleBrushed = function() {
         if (!d3.event.selection) {
-            this.selected = this.dataa
+          my.selected = my.dataa
           d3.selectAll(".dot")
               .transition()
               .duration(200)
@@ -161,6 +130,7 @@ name: "ScatterPlot",
               .attr("r", 3 )
           return;
         }
+
         var brush_coords = d3.brushSelection(this);
         console.log("coords: " + brush_coords)
         var dots = d3.selectAll(".dot").filter(function (){
@@ -168,6 +138,8 @@ name: "ScatterPlot",
                 cy = d3.select(this).attr("cy");
             return isBrushed(brush_coords, cx, cy);
           })
+        var dotsData = dots.data()
+        d3.select(this).call(brush.move, null)
         d3.selectAll(".dot")
             .transition()
             .duration(200)
@@ -178,8 +150,7 @@ name: "ScatterPlot",
             .duration(200)
             .style("fill", function (d) { return color(d.Gender) } )
             .attr("r", 5)
-
-        this.selected = dots.data()
+        my.selected = dotsData
       }
       var x = d3.scaleLinear()
           .domain([15, 70])
@@ -202,8 +173,18 @@ name: "ScatterPlot",
           .attr("cy", function (d) { return y(d.PayPlusBonus); } )
           .attr("r", 3)
           .style("fill", function (d) { return color(d.Gender) } )
-          // .on("mouseover", highlight)
-          // .on("mouseleave", doNotHighlight)
+          .on("mouseover", function (d){
+            var pageX = d3.event.pageX
+            var pageY = d3.event.pageY
+            tooltip.style("left", pageX + 10 + "px")
+            tooltip.style("top", pageY - 25 + "px")
+            tooltip.style("display", "inline-block")
+            tooltip.style("opacity", "0.9")
+            tooltip.html("Gender: " + d.Gender+"<br>"+"Job Title: " + d.JobTitle+"<br>"+"Pay plus Bonus: " + d.PayPlusBonus+"<br>"+"Age: " + d.Age+"<br>"+"Education: " + d.Education)
+          })
+          .on("mouseleave", function (d) {
+            tooltip.style("display", "none")
+          })
           // .on("mousemove", mousemove)
 
 

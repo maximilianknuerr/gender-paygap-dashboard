@@ -4,6 +4,20 @@ from rest_framework.response import Response
 from pandas import pandas as pd
 import json
 
+@api_view(['POST'])
+def gender_data(request):
+
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        data = body['Data']
+        df = pd.DataFrame(data)
+        gender = df["Gender"].value_counts()
+
+        return Response(gender)
+
+    return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 

@@ -1,19 +1,8 @@
 <template v-if="allData">
 <v-container fill-height>
   <v-row>
-    <v-col cols="3">
-      <v-select @change="changeAge" :items="ageItems" label="Age"></v-select>
-    </v-col>
-    <v-col cols="3">
-      <v-select @change="changeEducation" :items="educationItems" label="Education"></v-select>
-    </v-col>
-    <v-col cols="3">
-      <v-select @change="changeJobTitle" :items="jobTitleItems" label="Beruf"></v-select>
-    </v-col>
-  </v-row>
-  <v-row>
     <v-col cols="6">
-      <ScatterPlot v-if="allData" :dataa="allData"></ScatterPlot>
+      <ScatterPlot v-if="allData" :dataa="allData" @selected="changeScatterSelected"></ScatterPlot>
     </v-col>
     <v-col cols="6">
       <PieChart v-if="maleFemale" :dataa="maleFemale"></PieChart>
@@ -21,10 +10,10 @@
   </v-row>
   <v-row>
     <v-col cols="6">
-      <RidgeLinePlot v-if="allData" :dataa="allData"></RidgeLinePlot>
+      <RidgeLinePlot v-if="ridgeData" :dataa="ridgeData"></RidgeLinePlot>
     </v-col>
     <v-col cols="6">
-
+      <BarPlot v-if="barData" :dataa="barData"></BarPlot>
     </v-col>
   </v-row>
 </v-container>
@@ -32,18 +21,22 @@
 
 <script>
 import PieChart from "@/components/PieChart";
-import getData from "@/helpers/DataFetcher";
+import {getData, getGender} from "@/helpers/DataFetcher";
 import ScatterPlot from "@/components/ScatterPlot";
 import RidgeLinePlot from "@/components/RidgeLinePlot";
+import BarPlot from "@/components/BarPlot";
 export default {
 name: "Home",
   components: {
+    BarPlot,
     RidgeLinePlot,
     PieChart,
     ScatterPlot
   },
   data: () => ({
     allData: null,
+    barData: null,
+    ridgeData: null,
     ageItems: ["18 - 25", "26 - 35", "36 - 50", "51 - 70", "Alle anzeigen"],
     selectedAge: "Alle anzeigen",
     educationItems: ["High School", "College", "Masters", "PhD", "Alle anzeigen"],
@@ -66,14 +59,28 @@ name: "Home",
       this.selectedJobTitle = data
       this.fetchData()
     },
+    changeScatterSelected(data) {
+      this.barData = data
+      this.ridgeData = data
+      this.fetchGender(data)
+    },
     fetchData () {
       getData({Education: this.selectedEducation, JobTitle: this.selectedJobTitle, Age: this.selectedAge})
         .then((data) => {
           console.log(data)
           this.allData = data[0]
+          this.barData = this.allData
+          this.ridgeData = this.allData
           this.maleFemale = [data[1], data[2]]
         })
 
+    },
+    fetchGender(data) {
+      getGender({Data: data})
+          .then((data) => {
+            console.log(data)
+            this.maleFemale = [data[0], data[1]]
+          })
     }
   },
   async mounted () {
