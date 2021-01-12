@@ -2,10 +2,10 @@
 <v-container fill-height>
   <v-row>
     <v-col cols="6">
-      <ScatterPlot v-if="allData" :dataa="allData" @selected="changeScatterSelected"></ScatterPlot>
+      <ScatterPlot v-if="scatterData" :dataa="scatterData" @selected="changeScatterSelected"></ScatterPlot>
     </v-col>
     <v-col cols="6">
-      <PieChart v-if="maleFemale" :dataa="maleFemale"></PieChart>
+      <PieChart v-if="maleFemale" :dataa="maleFemale" @selected="changePieSelected"></PieChart>
     </v-col>
   </v-row>
   <v-row>
@@ -13,7 +13,7 @@
       <RidgeLinePlot v-if="ridgeData" :dataa="ridgeData"></RidgeLinePlot>
     </v-col>
     <v-col cols="6">
-      <BarPlot v-if="barData" :dataa="barData"></BarPlot>
+      <BarPlot v-if="barData" :dataa="barData" @selected="changeBarSelected"></BarPlot>
     </v-col>
   </v-row>
 </v-container>
@@ -35,6 +35,7 @@ name: "Home",
   },
   data: () => ({
     allData: null,
+    scatterData: null,
     barData: null,
     ridgeData: null,
     ageItems: ["18 - 25", "26 - 35", "36 - 50", "51 - 70", "Alle anzeigen"],
@@ -64,11 +65,31 @@ name: "Home",
       this.ridgeData = data
       this.fetchGender(data)
     },
+    changeBarSelected(data) {
+      getData({Education: data, JobTitle: "", Gender: ""})
+          .then((data) => {
+            console.log(data)
+            this.scatterData = data[0]
+            this.ridgeData = data[0]
+            this.maleFemale = [data[1], data[2]]
+          })
+    },
+    changePieSelected(data) {
+      getData({Education: "", JobTitle: "", Gender: data})
+          .then((data) => {
+            console.log(data)
+            this.scatterData = data[0]
+            this.ridgeData = data[0]
+            this.barData = data[0]
+            
+          })
+    },
     fetchData () {
-      getData({Education: this.selectedEducation, JobTitle: this.selectedJobTitle, Age: this.selectedAge})
+      getData({Education: "", JobTitle: "", Gender: ""})
         .then((data) => {
           console.log(data)
           this.allData = data[0]
+          this.scatterData = this.allData
           this.barData = this.allData
           this.ridgeData = this.allData
           this.maleFemale = [data[1], data[2]]

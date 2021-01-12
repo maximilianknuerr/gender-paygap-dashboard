@@ -34,33 +34,32 @@ def data(request):
         jobtitle = ''
         if('JobTitle' in body):
             jobtitle = body['JobTitle']
-        age = ''
-        if('Age' in body):
-            age = body['Age']
-        return Response(manipulateData(education, jobtitle, age))
+        gender = ''
+        if('Gender' in body):
+            gender = body['Gender']
+        return Response(manipulateData(education, jobtitle, gender))
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-def manipulateData(education, jobtitle, age):
+def manipulateData(education, jobtitle, gender):
     df = pd.read_csv('data/genderPayGap.csv')
     df['PayPlusBonus'] = df['BasePay'] + df['Bonus']
     mdata = df
+    female = 0
+    male = 0
     if(education != "Alle anzeigen" and education != ''):
         mdata = mdata.loc[(df['Education'] == education)]
     if(jobtitle != "Alle anzeigen" and jobtitle != ''):
         mdata = mdata.loc[(df['JobTitle'] == jobtitle)]
-    if(age != "Alle anzeigen" and age != ''):
-        min, max = min_max_age(age)
-        mdata = mdata.loc[(df['Age'] > min) & (df['Age'] < max)]
-    gender = mdata["Gender"].value_counts()
-    female = gender.Female
-    male = gender.Male
+    if(gender != "Alle anzeigen" and gender != ''):
+        mdata = mdata.loc[(df['Gender'] == gender)]
+    else:
+        genderA = mdata["Gender"].value_counts()
+        female = genderA.Female
+        male = genderA.Male
+
     mdata_result = mdata.to_json(orient="records")
     mdata_json = json.loads(mdata_result)
     return mdata_json, male, female
 
-def min_max_age(age):
-    age = age.split(" - ")
-    min, max = int(age[0]), int(age[1])
-    return min, max

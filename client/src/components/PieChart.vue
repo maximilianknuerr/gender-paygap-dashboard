@@ -18,6 +18,9 @@ name: "PieChart",
   }),
   props: ["dataa"],
   watch: {
+    selected() {
+      this.$emit('selected', this.selected)
+    },
     dataa() {
       this.draw()
     }
