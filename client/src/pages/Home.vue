@@ -10,7 +10,7 @@
   </v-row>
   <v-row>
     <v-col cols="6">
-      <RidgeLinePlot v-if="ridgeData" :dataa="ridgeData"></RidgeLinePlot>
+      <RidgeLinePlot v-if="ridgeData" :dataa="ridgeData" @selected="changeRidgeSelected"></RidgeLinePlot>
     </v-col>
     <v-col cols="6">
       <BarPlot v-if="barData" :dataa="barData" @selected="changeBarSelected"></BarPlot>
@@ -69,6 +69,7 @@ name: "Home",
       getData({Education: data, JobTitle: "", Gender: ""})
           .then((data) => {
             console.log(data)
+            this.barData = this.allData
             this.scatterData = data[0]
             this.ridgeData = data[0]
             this.maleFemale = [data[1], data[2]]
@@ -82,6 +83,17 @@ name: "Home",
             this.ridgeData = data[0]
             this.barData = data[0]
             
+          })
+    },
+    changeRidgeSelected(data) {
+      getData({Education: "", JobTitle: data, Gender: ""})
+          .then((data) => {
+            console.log(data)
+            this.ridgeData = this.allData
+            this.scatterData = data[0]
+            this.barData = data[0]
+            this.maleFemale = [data[1], data[2]]
+
           })
     },
     fetchData () {

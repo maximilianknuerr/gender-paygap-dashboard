@@ -48,6 +48,25 @@ name: "BarPlot",
     }
   },
   methods: {
+    drawAxis() {
+      var groups = ["High School", "College", "Masters", "PhD"]
+      // Add X axis
+      var x = d3.scaleBand()
+          .domain(groups)
+          .range([0, this.width])
+          .padding([0.2])
+      this.svg.append("g")
+          .attr("transform", "translate(0," + this.height + ")")
+          .call(d3.axisBottom(x).tickSize(0));
+
+      // Add Y axis
+      var y = d3.scaleLinear()
+          .domain([0, 150000])
+          .range([ this.height, 0 ]);
+      this.svg.append("g")
+          .call(d3.axisLeft(y));
+
+    },
     draw() {
       var my = this
       var height = 400 - this.margin.top - this.margin.bottom
@@ -90,16 +109,13 @@ name: "BarPlot",
           .domain(groups)
           .range([0, this.width])
           .padding([0.2])
-      this.svg.append("g")
-          .attr("transform", "translate(0," + this.height + ")")
-          .call(d3.axisBottom(x).tickSize(0));
+
 
       // Add Y axis
       var y = d3.scaleLinear()
           .domain([0, 150000])
           .range([ this.height, 0 ]);
-      this.svg.append("g")
-          .call(d3.axisLeft(y));
+
 
       // Another scale for subgroup position?
       var xSubgroup = d3.scaleBand()
@@ -126,7 +142,7 @@ name: "BarPlot",
           .enter().append("rect")
           .attr("x", function(d) {
             return xSubgroup(d.key); })
-          .attr("class", function(d){return d.group})
+          .attr("class", function(d){return d.group.replace(" ", "")})
           .attr("y", function(d) { return y(d.value); })
           .attr("width", xSubgroup.bandwidth())
           .attr("height", function(d) {return height - y(d.value); })
@@ -138,7 +154,7 @@ name: "BarPlot",
               d3.selectAll("rect")
                   .style("opacity", 0.1)
 
-              d3.selectAll("." + d.group)
+              d3.selectAll("." + d.group.replace(" ", ""))
                   .style("opacity", 1)
             }else {
               my.selected = ""
@@ -165,6 +181,7 @@ name: "BarPlot",
     }
   },
   mounted() {
+    this.drawAxis()
     this.draw()
   }
 }
