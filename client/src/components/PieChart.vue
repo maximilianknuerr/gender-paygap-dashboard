@@ -10,8 +10,8 @@ export default {
 name: "PieChart",
   id: "piechart",
   data: () => ({
-    width: 450,
-    height: 450,
+    width: 400,
+    height: 400,
     margin: 40,
     selected: ''
 

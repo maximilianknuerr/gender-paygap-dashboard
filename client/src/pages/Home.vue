@@ -1,19 +1,48 @@
 <template v-if="allData">
 <v-container fill-height>
   <v-row>
-    <v-col cols="6">
-      <ScatterPlot v-if="scatterData" :dataa="scatterData" @selected="changeScatterSelected"></ScatterPlot>
+    <v-col cols="7">
+      <v-card>
+        <v-card-title>
+          Distribution by Age and Salary
+        </v-card-title>
+        <v-card-actions>
+          <ScatterPlot v-if="scatterData" :dataa="scatterData" @selected="changeScatterSelected"></ScatterPlot>
+        </v-card-actions>
+      </v-card>
+
     </v-col>
-    <v-col cols="6">
-      <PieChart v-if="maleFemale" :dataa="maleFemale" @selected="changePieSelected"></PieChart>
+    <v-col cols="5">
+      <v-card>
+        <v-card-title>
+          Distribution by gender
+        </v-card-title>
+        <v-card-actions>
+          <PieChart v-if="maleFemale" :dataa="maleFemale" @selected="changePieSelected"></PieChart>
+        </v-card-actions>
+      </v-card>
     </v-col>
   </v-row>
-  <v-row>
-    <v-col cols="6">
-      <RidgeLinePlot v-if="ridgeData" :dataa="ridgeData" @selected="changeRidgeSelected"></RidgeLinePlot>
+  <v-row class="mt-1">
+    <v-col cols="7">
+      <v-card>
+        <v-card-title>
+          Distribution by Salary and Job Title
+        </v-card-title>
+        <v-card-actions>
+          <RidgeLinePlot v-if="ridgeData" :dataa="ridgeData" @selected="changeRidgeSelected"></RidgeLinePlot>
+        </v-card-actions>
+      </v-card>
     </v-col>
-    <v-col cols="6">
-      <BarPlot v-if="barData" :dataa="barData" @selected="changeBarSelected"></BarPlot>
+    <v-col cols="5">
+      <v-card>
+        <v-card-title>
+          Distribution by Education and Salary
+        </v-card-title>
+        <v-card-actions>
+          <BarPlot v-if="barData" :dataa="barData" @selected="changeBarSelected"></BarPlot>
+        </v-card-actions>
+      </v-card>
     </v-col>
   </v-row>
 </v-container>

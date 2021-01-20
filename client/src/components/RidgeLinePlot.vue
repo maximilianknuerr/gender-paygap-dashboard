@@ -24,7 +24,7 @@ name: "RidgeLinePlot",
   },
   computed: {
     margin: function (){
-      return {top: 30, right: 30, bottom: 50, left: 100}
+      return {top: 30, right: 30, bottom: 20, left: 100}
     },
     width: function () {
       return 800 - this.margin.left - this.margin.right
@@ -45,7 +45,7 @@ name: "RidgeLinePlot",
   },
   methods: {
     drawAxis() {
-      var margin = {top: 30, right: 30, bottom: 50, left: 100}
+      var margin = {top: 30, right: 30, bottom: 20, left: 100}
       var width = 600 - margin.left - margin.right
       var height = 400 - margin.top - margin.bottom
 
@@ -73,7 +73,7 @@ name: "RidgeLinePlot",
           .attr("text-anchor", "end")
           .attr("x", width)
           .attr("y", height + 40)
-          .text("Pay Plus Bonus");
+          // .text("Pay Plus Bonus");
 
 
 
@@ -89,7 +89,7 @@ name: "RidgeLinePlot",
     },
     draw() {
       var my = this
-      var margin = {top: 30, right: 30, bottom: 50, left: 100}
+      var margin = {top: 30, right: 30, bottom: 20, left: 100}
       var width = 600 - margin.left - margin.right
       var height = 400 - margin.top - margin.bottom
 
