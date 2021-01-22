@@ -98,7 +98,7 @@ name: "Home",
       getData({Education: data, JobTitle: "", Gender: ""})
           .then((data) => {
             console.log(data)
-            this.barData = this.allData
+            
             this.scatterData = data[0]
             this.ridgeData = data[0]
             this.maleFemale = [data[1], data[2]]
@@ -118,7 +118,7 @@ name: "Home",
       getData({Education: "", JobTitle: data, Gender: ""})
           .then((data) => {
             console.log(data)
-            this.ridgeData = this.allData
+
             this.scatterData = data[0]
             this.barData = data[0]
             this.maleFemale = [data[1], data[2]]
