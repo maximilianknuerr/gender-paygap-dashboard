@@ -1,5 +1,6 @@
 # wivdashboard
-
+## Screenshot
+![](Bildschirmfoto_2021-01-22_um_12.53.38.png)
 ## Project setup
 ```
 yarn install
