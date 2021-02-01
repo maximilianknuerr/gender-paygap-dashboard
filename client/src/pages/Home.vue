@@ -98,7 +98,7 @@ name: "Home",
       getData({Education: data, JobTitle: "", Gender: ""})
           .then((data) => {
             console.log(data)
-            
+
             this.scatterData = data[0]
             this.ridgeData = data[0]
             this.maleFemale = [data[1], data[2]]
